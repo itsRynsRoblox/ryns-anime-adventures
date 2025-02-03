@@ -78,4 +78,4 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Support
 
-For help or feedback, feel free to ask for help on the **[Taxi Macro](https://discord.gg/taximacro)** discord server, or contact me [directly](https://discordapp.com/users/459268741138612226).
+For help or feedback, feel free to ask for help on the **[Taxi Macro](https://discord.gg/taximacro)** discord server.
