@@ -1,4 +1,4 @@
-# Anime Adventures Macro
+# Anime Adventures Assassin Contract Macro
 
 A quality-of-life rewrite of the **Anime Adventures Macro** originally developed by [Taxi Macro](https://discord.gg/taximacro). This version adds community-requested features and additional improvements to enhance usability and functionality.
 
