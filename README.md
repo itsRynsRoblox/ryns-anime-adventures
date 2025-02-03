@@ -2,7 +2,7 @@
 
 A quality-of-life rewrite of the **Anime Adventures Macro** originally developed by [Taxi Macro](https://discord.gg/taximacro). This version adds community-requested features and additional improvements to enhance usability and functionality.
 
-This macro is specifically designed for the **Winter Event** and the **Halloween Event** in Anime Adventures.
+This macro is specifically designed for the **Assassin Contracts** in Anime Adventures.
 
 ## Features
 
@@ -15,11 +15,6 @@ This macro is specifically designed for the **Winter Event** and the **Halloween
 
 - **Auto Unit Placement**: Automatically places units to optimal locations during gameplay.
 - **Auto Upgrades**: Automatically upgrades your units based on customizable preferences.
-
-### Seasonal Events
-
-- **Winter Event Macro**: Fully supports the **Winter Event**, automating tasks to complete the event and collect rewards.
-- **Halloween Event (Coming Soon)**: Ready to handle upcoming Halloween mechanics and activities.
 
 ---
 
