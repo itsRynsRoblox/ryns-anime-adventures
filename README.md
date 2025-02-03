@@ -18,6 +18,13 @@ This macro is specifically designed for the **Assassin Contracts** in Anime Adve
 
 ---
 
+## Removed Features
+
+- **Auto Updates**: Never trust an autohotkey script to auto update.
+- **Card Selection**: This was used for the winter event version of the old macro.
+
+---
+
 ## Installation
 
 1. Download the macro file from the [Releases](#) section.
