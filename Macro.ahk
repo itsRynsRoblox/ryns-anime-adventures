@@ -1092,8 +1092,10 @@ StartedLoop() {
         }
         break
     }
-    AddToLog("Game started, waiting 6s for income")
-	Sleep(6000)
+    if (!contractsEnabled) {
+        AddToLog("Game started, waiting 6s for income")
+        Sleep(6000)
+    }
 }
 
 LobbyLoop() {
