@@ -84,9 +84,6 @@ SaveConfigToFile(filePath) {
     for index, dropDown in dropDowns {
         File.WriteLine(Format("Enabled{}={}", index + 1, dropDown.Value))
     }
-    File.WriteLine("[Matchmaking]=" MatchmakingOrSolo.Value)
-    File.WriteLine("[WinterEvent]=" WinterEvent.Value)
-    File.WriteLine("[Contracts]=" Contracts.Value)
 
     File.WriteLine("[ChatSettings]")
     File.WriteLine("MessageToSend=" ChatToSend.Value)
@@ -117,6 +114,15 @@ SaveConfigToFile(filePath) {
     File.WriteLine("[PlacementTimer]")
     File.WriteLine("Time=" PlacementTimerDropdown.Value)
 
+    File.WriteLine("[Matchmaking]")
+    File.WriteLine("Enabled=" MatchmakingOrSolo.Value)
+
+    File.WriteLine("[WinterEvent]")
+    File.WriteLine("Enabled=" WinterEvent.Value)
+
+    File.WriteLine("[Contracts]")
+    File.WriteLine("Enabled=" Contracts.Value)
+
     File.Close()
     AddToLog("Configuration saved successfully to " filePath ".`nIf you changed keybinds, you will have to restart the macro.`n")
 }
@@ -126,7 +132,7 @@ LoadConfigFromFile(filePath) {
     global placement1, placement2, placement3, placement4, placement5, placement6
     global dropDowns, ChatToSend, ChatStatusBox, WebhookURL, WebhookCheckbox, DisconnectCheckbox, UUPCheckbox
     global hotkey1, hotkey2, hotkey3
-    global WinterEvent, Contracts, PlacementDropdown, PlacementTimerDropdown
+    global WinterEvent, Contracts, PlacementDropdown, PlacementTimerDropdown, MatchmakingOrSolo
     global CaptchaDropdown
 
     if !FileExist(filePath) {
@@ -137,7 +143,7 @@ LoadConfigFromFile(filePath) {
 
         KeyBinds.Text := "F1 - Fix Roblox Position `n F2 - Start Macro `n F3 - Stop Macro"
         PlacementDropdown.Value := 6
-        CaptchaDropdown.Value := 6
+        CaptchaDropdown.Value := 5
         PlacementTimerDropdown.Value := 1
     } else {
         ; Open file for reading
@@ -181,6 +187,21 @@ LoadConfigFromFile(filePath) {
                 }
                 if RegExMatch(line, "ChatEnabled=(\d+)", &match) {
                     ChatStatusBox.Value := match.1 ; Set the checkbox value
+                }
+            }
+            else if (section = "Matchmaking") {
+                if RegExMatch(line, "Enabled=(\d+)", &match) {
+                    MatchmakingOrSolo.Value := match.1
+                }
+            }
+            else if (section = "WinterEvent") {
+                if RegExMatch(line, "Enabled=(\d+)", &match) {
+                    WinterEvent.Value := match.1
+                }
+            }
+            else if (section = "Contracts") {
+                if RegExMatch(line, "Enabled=(\d+)", &match) {
+                    Contracts.Value := match.1
                 }
             }
             else if (section = "WebhookSettings") {

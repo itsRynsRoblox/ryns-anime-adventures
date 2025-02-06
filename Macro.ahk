@@ -83,6 +83,10 @@ InitializeMacro() {
     }
 
     if (ok := FindText(&X, &Y, 746, 476, 862, 569, 0, 0, AreasText)) {
+        if (!winterEventEnabled && !contractsEnabled) {
+            MsgBox("You must select a game mode before starting the macro", "Please select a game mode", "+0x1000",)
+            return
+        }
         GoToRaids()
     }
     else {
