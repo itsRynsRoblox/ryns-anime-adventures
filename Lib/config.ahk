@@ -7,7 +7,7 @@
 SaveConfig(*) {
     global enabled1, enabled2, enabled3, enabled4, enabled5, enabled6
     global placement1, placement2, placement3, placement4, placement5, placement6
-    global WinterEvent, Contracts, CaptchaDropdown, PlacementTimerDropdown
+    global WinterEvent, Contracts, CaptchaTimer, UnitTimer
 
     SaveChoiceGui.Show("AutoSize Center")
     return
@@ -16,7 +16,7 @@ SaveConfig(*) {
 LoadConfig(*) {
     global enabled1, enabled2, enabled3, enabled4, enabled5, enabled6
     global placement1, placement2, placement3, placement4, placement5, placement6
-    global WinterEvent, Contracts, CaptchaDropdown, PlacementTimerDropdown
+    global WinterEvent, Contracts, CaptchaTimer, UnitTimer
 
     LoadChoiceGui.Show("AutoSize Center")
     return
@@ -39,7 +39,7 @@ StringJoin(delimiter, arr) {
 }
 
 SaveConfigToFile(filePath) {
-    global hotkey1, hotkey2, hotkey3, PlacementDropdown, CaptchaDropdown, PlacementTimerDropdown
+    global hotkey1, hotkey2, hotkey3, PlacementDropdown, CaptchaTimer, UnitTimer
     directory := "Lib\Settings"
 
     if !DirExist(directory) {
@@ -108,11 +108,11 @@ SaveConfigToFile(filePath) {
     File.WriteLine("[PlacementLogic]")
     File.WriteLine("Logic=" PlacementDropdown.Value)
 
-    File.WriteLine("[CaptchaTime]")
-    File.WriteLine("Time=" CaptchaDropdown.Value)
+    File.WriteLine("[CaptchaTimer]")
+    File.WriteLine("Time=" CaptchaTimer.Value)
 
-    File.WriteLine("[PlacementTimer]")
-    File.WriteLine("Time=" PlacementTimerDropdown.Value)
+    File.WriteLine("[UnitTimer]")
+    File.WriteLine("Time=" UnitTimer.Value)
 
     File.WriteLine("[Matchmaking]")
     File.WriteLine("Enabled=" MatchmakingOrSolo.Value)
@@ -132,8 +132,8 @@ LoadConfigFromFile(filePath) {
     global placement1, placement2, placement3, placement4, placement5, placement6
     global dropDowns, ChatToSend, ChatStatusBox, WebhookURL, WebhookCheckbox, DisconnectCheckbox, UUPCheckbox
     global hotkey1, hotkey2, hotkey3
-    global WinterEvent, Contracts, PlacementDropdown, PlacementTimerDropdown, MatchmakingOrSolo
-    global CaptchaDropdown
+    global WinterEvent, Contracts, PlacementDropdown, MatchmakingOrSolo
+    global CaptchaTimer, UnitTimer
 
     if !FileExist(filePath) {
         AddToLog("No configuration file found. Default settings will be used.")
@@ -143,8 +143,8 @@ LoadConfigFromFile(filePath) {
 
         KeyBinds.Text := "F1 - Fix Roblox Position `n F2 - Start Macro `n F3 - Stop Macro"
         PlacementDropdown.Value := 6
-        CaptchaDropdown.Value := 5
-        PlacementTimerDropdown.Value := 1
+        CaptchaTimer.Value := 2
+        UnitTimer.Value := 2
     } else {
         ; Open file for reading
         file := FileOpen(filePath, "r", "UTF-8")
@@ -247,14 +247,14 @@ LoadConfigFromFile(filePath) {
                     PlacementDropdown.Value := match.1 ; Set the checkbox value
                 }
             }
-            else if (section = "CaptchaTime") {
+            else if (section = "CaptchaTimer") {
                 if RegExMatch(line, "Time=(\d+)", &match) {
-                    CaptchaDropdown.Value := match.1 ; Set the checkbox value
+                    CaptchaTimer.Value := match.1 ; Set the checkbox value
                 }
             }
-            else if (section = "PlacementTimer") {
+            else if (section = "UnitTimer") {
                 if RegExMatch(line, "Time=(\d+)", &match) {
-                    PlacementTimerDropdown.Value := match.1 ; Set the checkbox value
+                    UnitTimer.Value := match.1 ; Set the checkbox value
                 }
             }
         }

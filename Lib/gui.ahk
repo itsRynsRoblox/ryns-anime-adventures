@@ -18,18 +18,23 @@ CurrentChallenge := "None"
 MinimizeImage := "Lib\Images\minimize.png"
 CloseImage := "Lib/Images/close.png"
 TaxiImage := "Lib\Images\faxi pfp.png"
+GithubImage := "Lib\Images\github-logo.png"
 DiscordImage := "Lib\Images\Discord-Logo.png"
 lastlog := ""
-MainGUI := Gui("-Caption +Border +AlwaysOnTop", "Ryns Taxi Macro")
+MainGUI := Gui("-Caption +Border +AlwaysOnTop", "Ryns Hub Macro")
 
 MainGUI.BackColor := "0c000a"
 MainGUI.SetFont("s9 bold", "Segoe UI")
 
-CloseAppButton := MainGUI.Add("Picture", "x910 y8 w60 h34 +BackgroundTrans cffffff", DiscordImage)
+;CloseAppButton := MainGUI.Add("Picture", "x910 y8 w60 h34 +BackgroundTrans cffffff", DiscordImage)
+CloseAppButton := MainGUI.Add("Picture", "x112 y645 w60 h34 +BackgroundTrans cffffff", DiscordImage)
 CloseAppButton.OnEvent("Click", (*) => OpenDiscord())
 
-CloseAppButton := MainGUI.Add("Picture", "x820 y-20 w90 h90 +BackgroundTrans cffffff", TaxiImage)
-CloseAppButton.OnEvent("Click", (*) => OpenFaxiDiscord())
+;CloseAppButton := MainGUI.Add("Picture", "x890 y-10 w90 h90 +BackgroundTrans cffffff", TaxiImage)
+;CloseAppButton.OnEvent("Click", (*) => OpenFaxiDiscord())
+
+CloseAppButton := MainGUI.Add("Picture", "x30 y640 w40 h40 +BackgroundTrans cffffff", GithubImage)
+CloseAppButton.OnEvent("Click", (*) => OpenGithub())
 
 MinimizeButton := MainGUI.Add("Picture", "x1000 y22 w37 h9 +BackgroundTrans cffffff", MinimizeImage)
 MinimizeButton.OnEvent("Click", (*) => MinimizeGUI())
@@ -37,33 +42,20 @@ MinimizeButton.OnEvent("Click", (*) => MinimizeGUI())
 CloseAppButton := MainGUI.Add("Picture", "x1052 y10 w30 h32 +BackgroundTrans cffffff", CloseImage)
 CloseAppButton.OnEvent("Click", (*) => ExitApp())
 
-GuideBttn := MainGui.Add("Button", "x830 y632 w105 cffffff +BackgroundTrans +Center", "How to use?")
+GuideBttn := MainGui.Add("Button", "x830 y43 w238 cffffff +BackgroundTrans +Center", "How to use?")
 GuideBttn.OnEvent("Click", (*) => OpenGuide())
+
+ConnectPSBttn := MainGui.Add("Button", "x830 y632 w98 cffffff +BackgroundTrans +Center", "Connect to PS")
+ConnectPSBttn.OnEvent("Click", (*) => ConnectPS())
+
+UnitTimer := MainGui.Add("DropDownList", "x603 y667 w90 Choose2", ["1.5s", "2s (Default)", "2.5s", "3s"])
+MainGUI.Add("Text", "x500 y670 h60 c2bff00 +BackgroundTrans", "Placement Speed")
+
+CaptchaTimer := MainGui.Add("DropDownList", "x395 y667 w90 Choose2", ["2s", "5s (Default)", "7s", "10s"])
+MainGUI.Add("Text", "x310 y670 h60 c2bff00 +BackgroundTrans", "Captcha Retry")
 
 #Requires AutoHotkey v2.0
 #MaxThreadsPerHotkey 2
-
-
-; Create the initial GUI
-TimerSettings := Gui("+AlwaysOnTop")
-TimerSettings.SetFont("s8 bold", "Segoe UI")
-
-; Set GUI properties
-TimerSettings.BackColor := "0c000a"
-TimerSettings.MarginX := 20
-TimerSettings.MarginY := 20
-TimerSettings.OnEvent("Close", (*) => TimerSettings.Hide())
-TimerSettings.Title := "Timer Settings UI"
-
-TimerSettings.Add("Text", "x30 y20 w340 h190 +Center cffffff", "Settings")
-
-; Add Launch Button
-Webhookbttn := TimerSettings.Add("Button", "x30 y45 w150", "Captcha Timer")
-Webhookbttn.OnEvent("Click", (*) => OpenCaptchaTimer())
-
-SendChatBttn := TimerSettings.Add("Button", "x220 y45 w150", "Unit Placement Timer")
-SendChatBttn.OnEvent("Click", (*) => OpenPlacementTimer())
-
 
 ; Create the initial GUI
 MainSettings := Gui("+AlwaysOnTop")
@@ -82,8 +74,10 @@ MainSettings.Add("Text", "x30 y20 w340 h190 +Center cffffff", "Settings")
 Webhookbttn := MainSettings.Add("Button", "x30 y45 w150", "Webhook Settings")
 Webhookbttn.OnEvent("Click", (*) => OpenWebhooks())
 
-SendChatBttn := MainSettings.Add("Button", "x220 y45 w150", "Timer Settings")
-SendChatBttn.OnEvent("Click", (*) => OpenTimerSettings())
+PSbttn := MainSettings.Add("Button", "x220 y45 w150", "Auto Reconnect Settings")
+PSbttn.OnEvent("Click", (*) => PSLinkSettingsUI())
+
+;SendChatBttn := MainSettings.Add("Button", "x220 y45 w150", "Timer Settings")
 
 SendChatBttn := MainSettings.Add("Button", "x30 y110 w150", "Keybinds")
 SendChatBttn.OnEvent("Click", (*) => OpenKeybinds())
@@ -112,20 +106,13 @@ OpenPlacementLogic() {
     PlacementLogicUI.Show()
 }
 
-OpenCaptchaTimer() {
-    CaptchaDropdownUI.Show()
-}
-
-OpenPlacementTimer() {
-    PlacementTimerDropdownUI.Show()
-}
 ; Show the main settings GUI
 ; Show the initial GUI
 OpenSettings() {
     MainSettings.Show("AutoSize Center")
 }
 
-Contracts := MainGUI.Add("Checkbox", "x700 y640 w105 c2bff00 Checked", "Contracts")
+Contracts := MainGUI.Add("Checkbox", "x430 y648 w105 c2bff00 Checked", "Contracts")
 Contracts.OnEvent('Click', (*) => changeContracts())
 
 changeContracts() {
@@ -138,7 +125,7 @@ changeContracts() {
     }
 }
 
-WinterEvent := MainGUI.Add("Checkbox", "x550 y640 w150 c2bff00", "Winter Event")
+WinterEvent := MainGUI.Add("Checkbox", "x320 y648 w105 c2bff00", "Winter Event")
 WinterEvent.OnEvent('Click', (*) => changeWinterEvent())
 
 changeWinterEvent() {
@@ -152,34 +139,14 @@ changeWinterEvent() {
 
 }
 
-MatchmakingOrSolo := MainGUI.Add("Checkbox", "x400 y640 w150 c2bff00 Checked", "Matchmaking")
+MatchmakingOrSolo := MainGUI.Add("Checkbox", "x210 y648 w105 c2bff00 Checked", "Matchmaking")
 MatchmakingOrSolo.OnEvent('Click', (*) => changeMatchmaking())
 
 changeMatchmaking() {
     global matchmakingEnabled := MatchmakingOrSolo.Value
 }
 
-global CaptchaDropdownUI := Gui("+AlwaysOnTop")
-CaptchaDropdownUI.SetFont("s10 bold", "Segoe UI")
-CaptchaDropdownUI.BackColor := "0c000a"
-CaptchaDropdownUI.MarginX := 20
-CaptchaDropdownUI.MarginY := 20
-CaptchaDropdownUI.Add("Text", "x10 y8 w250 cWhite", "If you feel like the captcha retry method is too fast or slow, change this option")
-CaptchaDropdownUI.SetFont("s8", "Segoe UI")
-CaptchaDropdownUI.Title := "Captcha Settings"
-global CaptchaDropdown := CaptchaDropdownUI.Add("DropDownList", "x10 y60 w250 cffffff Choose1", [2000, 4000, 6000, 8000, 10000])
-
-global PlacementTimerDropdownUI := Gui("+AlwaysOnTop")
-PlacementTimerDropdownUI.SetFont("s10 bold", "Segoe UI")
-PlacementTimerDropdownUI.BackColor := "0c000a"
-PlacementTimerDropdownUI.MarginX := 20
-PlacementTimerDropdownUI.MarginY := 20
-PlacementTimerDropdownUI.Add("Text", "x10 y8 w250 cWhite", "If you feel like unit placement is too fast or slow, change this option")
-PlacementTimerDropdownUI.SetFont("s8", "Segoe UI")
-PlacementTimerDropdownUI.Title := "Placement Timer Settings"
-global PlacementTimerDropdown := PlacementTimerDropdownUI.Add("DropDownList", "x10 y60 w250 cffffff Choose1", [1500, 2000, 2500, 3000, 3500])
-
-MainGUI.Add("Text", "x10 y5 h60 c2bff00 +BackgroundTrans", "Version: 1.0")
+MainGUI.Add("Text", "x10 y5 h60 c2bff00 +BackgroundTrans", "Ryn's Anime Adventures Macro")
 
 WebhookBtn := MainGui.Add("Button", "x965 y632 w105 cffffff +BackgroundTrans +Center", "Settings")
 WebhookBtn.OnEvent('Click', (*) => OpenSettings())
@@ -187,32 +154,34 @@ WebhookBtn.OnEvent('Click', (*) => OpenSettings())
 MainGUI.AddProgress("c0x7e4141 x8 y27 h602 w800", 100) ; box behind roblox, credits to yuh for this idea
 WinSetTransColor("0x7e4141 255", MainGUI)
 
-MainGUI.Add("GroupBox", "x830 y60 w238 h250 c2bff00 ", "Unit Setup")
-enabled1 := MainGUI.Add("Checkbox", "x840 y80 cffffff", "Slot 1")
-enabled2 := MainGUI.Add("Checkbox", "x840 y110 cffffff", "Slot 2")
-enabled3 := MainGUI.Add("Checkbox", "x840 y140 cffffff", "Slot 3")
-enabled4 := MainGUI.Add("Checkbox", "x840 y170 cffffff", "Slot 4")
-enabled5 := MainGUI.Add("Checkbox", "x840 y200 cffffff", "Slot 5")
-enabled6 := MainGUI.Add("Checkbox", "x840 y230 cffffff", "Slot 6")
+MainGUI.Add("GroupBox", "x190 y630 w615 h65 cd9ff00 ", "Macro Settings")
 
-placement1 := MainGUI.Add("DropDownList", "x1020 y80  w40 cffffff Choose3", [1, 2, 3, 4, 5])
-placement2 := MainGUI.Add("DropDownList", "x1020 y110 w40 cffffff Choose3", [1, 2, 3, 4, 5])
-placement3 := MainGUI.Add("DropDownList", "x1020 y140 w40 cffffff Choose3", [1, 2, 3, 4, 5])
-placement4 := MainGUI.Add("DropDownList", "x1020 y170 w40 cffffff Choose3", [1, 2, 3, 4, 5])
-placement5 := MainGUI.Add("DropDownList", "x1020 y200 w40 cffffff Choose3", [1, 2, 3, 4, 5])
-placement6 := MainGUI.Add("DropDownList", "x1020 y230 w40 cffffff Choose3", [1, 2, 3, 4, 5])
+MainGUI.Add("GroupBox", "x830 y70 w238 h250 c2bff00 ", "Unit Setup")
+enabled1 := MainGUI.Add("Checkbox", "x840 y90 cffffff", "Slot 1")
+enabled2 := MainGUI.Add("Checkbox", "x840 y120 cffffff", "Slot 2")
+enabled3 := MainGUI.Add("Checkbox", "x840 y150 cffffff", "Slot 3")
+enabled4 := MainGUI.Add("Checkbox", "x840 y180 cffffff", "Slot 4")
+enabled5 := MainGUI.Add("Checkbox", "x840 y210 cffffff", "Slot 5")
+enabled6 := MainGUI.Add("Checkbox", "x840 y240 cffffff", "Slot 6")
 
-MainGUI.Add("Text", "x940 y80 h60 cffffff +BackgroundTrans", "Placements: ")
-MainGUI.Add("Text", "x940 y110 h60 cffffff +BackgroundTrans", "Placements: ")
-MainGUI.Add("Text", "x940 y140 h60 cffffff +BackgroundTrans", "Placements: ")
-MainGUI.Add("Text", "x940 y170 h60 cffffff +BackgroundTrans", "Placements: ")
-MainGUI.Add("Text", "x940 y200 h60 cffffff +BackgroundTrans", "Placements: ")
-MainGUI.Add("Text", "x940 y230 h60 cffffff +BackgroundTrans", "Placements: ")
+placement1 := MainGUI.Add("DropDownList", "x1020 y90  w40 cffffff Choose3", [1, 2, 3, 4, 5])
+placement2 := MainGUI.Add("DropDownList", "x1020 y120 w40 cffffff Choose3", [1, 2, 3, 4, 5])
+placement3 := MainGUI.Add("DropDownList", "x1020 y150 w40 cffffff Choose3", [1, 2, 3, 4, 5])
+placement4 := MainGUI.Add("DropDownList", "x1020 y180 w40 cffffff Choose3", [1, 2, 3, 4, 5])
+placement5 := MainGUI.Add("DropDownList", "x1020 y210 w40 cffffff Choose3", [1, 2, 3, 4, 5])
+placement6 := MainGUI.Add("DropDownList", "x1020 y240 w40 cffffff Choose3", [1, 2, 3, 4, 5])
 
-SaveConfigBttn := MainGUI.Add("Button", "x840 y270 w95 h30 cffffff +Center", "Load config")
+MainGUI.Add("Text", "x940 y90 h60 cffffff +BackgroundTrans", "Placements: ")
+MainGUI.Add("Text", "x940 y120 h60 cffffff +BackgroundTrans", "Placements: ")
+MainGUI.Add("Text", "x940 y150 h60 cffffff +BackgroundTrans", "Placements: ")
+MainGUI.Add("Text", "x940 y180 h60 cffffff +BackgroundTrans", "Placements: ")
+MainGUI.Add("Text", "x940 y210 h60 cffffff +BackgroundTrans", "Placements: ")
+MainGUI.Add("Text", "x940 y240 h60 cffffff +BackgroundTrans", "Placements: ")
+
+SaveConfigBttn := MainGUI.Add("Button", "x840 y280 w95 h30 cffffff +Center", "Load config")
 SaveConfigBttn.OnEvent("Click", (*) => LoadConfig())
 
-SaveConfigBttn := MainGUI.Add("Button", "x960 y270 w95 h30 cffffff +Center", "Save config")
+SaveConfigBttn := MainGUI.Add("Button", "x960 y280 w95 h30 cffffff +Center", "Save config")
 SaveConfigBttn.OnEvent("Click", (*) => SaveConfig())
 
 
@@ -224,9 +193,9 @@ KeyBinds := MainGUI.Add("Text", "x830 y560 w238 h300 r7 cffffff +BackgroundTrans
 
 MainGUI.SetFont("s16 bold", "Segoe UI")
 
-MainGUI.Add("Text", "x12 y632 w800 c2bff00 +BackgroundTrans", "Ryn's Taxi Macro")
+;MainGUI.Add("Text", "x12 y650 w800 c2bff00 +BackgroundTrans", "Ryn's Hub Macro")
 
-MainGUI.Show("x27 y15 w1100 h665")
+MainGUI.Show("x27 y15 w1100 h700")
 
 AddToLog(text) {
     global lastlog
@@ -234,11 +203,15 @@ AddToLog(text) {
 }
 
 MinimizeGUI() {
-    WinMinimize("Ryns Taxi Macro")
+    WinMinimize("Ryns Hub Macro")
 }
 
 OpenFaxiDiscord() {
     Run("https://discord.gg/UB9AaPzqdq")
+}
+
+OpenGithub() {
+    Run("https://github.com/itsRynsRoblox?tab=repositories")
 }
 
 OpenDiscord() {
@@ -266,10 +239,6 @@ SendChatGUI.Title := "Send Chat"
 
 OpenSendChat() {
     SendChatGUI.Show("w300 h150")
-}
-
-OpenTimerSettings() {
-    TimerSettings.Show("AutoSize Center")
 }
 
 if FileExist("C:\config.txt") {

@@ -10,6 +10,7 @@
 #Include %A_ScriptDir%\Lib\WebhookOptions.ahk
 #Include %A_ScriptDir%\Lib\keybinds.ahk
 #Include %A_ScriptDir%\Lib\IsProcessElevated.ahk
+#Include %A_ScriptDir%\Lib\pslink.ahk
 
 global MacroStartTime := A_TickCount
 global StageStartTime := A_TickCount
@@ -39,6 +40,8 @@ DeathText := "|<>*100$22.zzzzUzUw3w3l7l6ASAMtstXbXaASAQFgFkAEDUlUzzzzU"
 global contractsEnabled := Contracts.Value
 global winterEventEnabled := WinterEvent.Value
 global matchmakingEnabled := MatchmakingOrSolo.Value
+global captchaDelay := CaptchaTimer.Value
+global unitPlacementDelay := UnitTimer.Value
 global hasReconnect := 0
 global sentTab := false
 
@@ -52,9 +55,9 @@ SetupMacro() {
         WinMove(27, 15, 800, 600, RobloxWindow)
         Sleep 50
     }
-    if WinExist("Ryns Taxi Macro") {
+    if WinExist("Ryns Hub Macro") {
         Sleep 50
-        WinActivate("Ryns Taxi Macro")
+        WinActivate("Ryns Hub Macro")
         Sleep 100
     }
 
@@ -68,8 +71,8 @@ InitializeMacro() {
     global loss := 0
     global wins := 0
 
-    if WinExist("Ryns Taxi Macro") {
-        WinActivate("Ryns Taxi Macro")
+    if WinExist("Ryns Hub Macro") {
+        WinActivate("Ryns Hub Macro")
     }
 
     if WinExist(RobloxWindow) {
@@ -1251,42 +1254,42 @@ AntiCaptcha() {
 }
 
 CaptchaSleep() {
-    if (CaptchaDropdown.Value = 1) {
+    if (captchaDelay = 1) {
         Sleep 2000
         AddToLog("Sleeping for 2 seconds")
     }
-    if (CaptchaDropdown.Value = 2) {
+    if (captchaDelay = 2) {
         Sleep 4000
         AddToLog("Sleeping for 4 seconds")
     }
-    if (CaptchaDropdown.Value = 3) {
+    if (captchaDelay = 3) {
         Sleep 6000
         AddToLog("Sleeping for 6 seconds")
     }
-    if (CaptchaDropdown.Value = 4) {
+    if (captchaDelay = 4) {
         Sleep 8000
         AddToLog("Sleeping for 8 seconds")
     }
-    if (CaptchaDropdown.Value = 5) {
+    if (captchaDelay = 5) {
         AddToLog("Sleeping for 10 seconds")
         Sleep 10000
     }
 }
 
 PlacementTimerSleep() { ; Added for custom dropdown support
-    if (PlacementTimerDropdown.Value = 1) {
+    if (unitPlacementDelay = 1) {
         Sleep 1500
     }
-    if (PlacementTimerDropdown.Value = 2) {
+    if (unitPlacementDelay = 2) {
         Sleep 2000
     }
-    if (PlacementTimerDropdown.Value = 3) {
+    if (unitPlacementDelay = 3) {
         Sleep 2500
     }
-    if (PlacementTimerDropdown.Value = 4) {
+    if (unitPlacementDelay = 4) {
         Sleep 3000
     }
-    if (PlacementTimerDropdown.Value = 5) {
+    if (unitPlacementDelay= 5) {
         Sleep 3500
     }
 }
@@ -1344,36 +1347,114 @@ OnSpawnSetup() {
 }
 
 Reconnect() {
-    ; Check for Disconnected Screen
+    if !FileExist(PSLinkFile) {
+        AddToLog("Private server link file not found.")
+        return
+    }
+
+    pslink := FileRead(PSLinkFile, "UTF-8")
     color := PixelGetColor(519, 329) ; Get color at (519, 329)
-    global hasReconnect
-    if (color = 0x393B3D) {
+
+    if (color = 0x393B3D) { ; Check for Disconnected Screen
         AddToLog("Disconnected! Attempting to reconnect...")
-        if (DisconnectCheckbox.Value = 1) {
-            sendDCWebhook()
+        
+        ; Extract private server link code
+        if (RegExMatch(pslink, "privateServerLinkCode=(\d+)", &match)) {
+            linkCode := match[1]
+        } else {
+            AddToLog("Failed to find link code in URL!")
+            return
+        }
+
+        ; Extract place ID
+        if (RegExMatch(pslink, "games/(\d+)", &placeMatch)) {
+            placeID := placeMatch[1]
+        } else {
+            AddToLog("Failed to find place ID in URL!")
+            return
         }
 
         ; Use Roblox deep linking to reconnect
-        Run("roblox://placeID=" 8304191830)
+        local maxRetries := 20
+        local retries := 0
+
+        while (retries < maxRetries) {
+            Run("roblox://placeID=" placeID "&linkCode=" linkCode)
+            Sleep 2000
+
+            if WinExist(RobloxWindow) {
+                WinMove(27, 15, 800, 600, RobloxWindow)
+                WinActivate(RobloxWindow)
+                Sleep 1000
+            }
+
+            AddToLog("Reconnecting to Roblox...")
+            Sleep 45000 ; Wait before checking for reconnection
+			BetterClick(665, 146) ; close updatelog
+			Sleep 1000
+            if (ok := FindText(&X, &Y, 746, 476, 862, 569, 0, 0, AreasText)) {
+                AddToLog("Reconnected Successfully!")
+                return GoToRaids() ; start
+            }
+
+            retries++ ; Increment the retry count
+        }
+
+        AddToLog("Failed to reconnect after multiple attempts.")
+    }
+}
+
+ConnectPS() {
+    AddToLog("Attempting to connect to private server...")
+    if !FileExist(PSLinkFile) {
+        AddToLog("Private server link file not found.")
+        return
+    }
+
+    pslink := FileRead(PSLinkFile, "UTF-8")
+
+    ; Extract private server link code
+    if (RegExMatch(pslink, "privateServerLinkCode=(\d+)", &match)) {
+        linkCode := match[1]
+    } else {
+        AddToLog("Failed to find link code in URL!")
+        return
+    }
+
+    ; Extract place ID
+    if (RegExMatch(pslink, "games/(\d+)", &placeMatch)) {
+        placeID := placeMatch[1]
+    } else {
+        AddToLog("Failed to find place ID in URL!")
+        return
+    }
+
+    ; Use Roblox deep linking to reconnect
+    local maxRetries := 20
+    local retries := 0
+
+    while (retries < maxRetries) {
+        Run("roblox://placeID=" placeID "&linkCode=" linkCode)
         Sleep 2000
+
         if WinExist(RobloxWindow) {
             WinMove(27, 15, 800, 600, RobloxWindow)
             WinActivate(RobloxWindow)
             Sleep 1000
         }
-        loop {
-            AddToLog("Reconnecting to Roblox...")
-            Sleep 15000
-            if (ok := FindText(&X, &Y, 746, 476, 862, 569, 0, 0, AreasText)) {
-                AddToLog("Reconnected Succesfully!")
-                hasReconnect := 1
-                return GoToRaids() ; Check for challenges in the lobby
-            }
-            else {
-                Reconnect()
-            }
+
+        AddToLog("Connecting to Roblox...")
+        Sleep 45000 ; Wait before checking for connection
+        SendInput("{Tab}")
+        Sleep 500
+        if (ok := FindText(&X, &Y, 746, 476, 862, 569, 0, 0, AreasText)) {
+            AddToLog("Connected Successfully!")
+            return
         }
+        retries++ ; Increment the retry count
     }
+
+    AddToLog("Failed to connect after multiple attempts.")
 }
 
 cardSelector() {
