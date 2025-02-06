@@ -28,6 +28,9 @@ MainGUI.SetFont("s9 bold", "Segoe UI")
 CloseAppButton := MainGUI.Add("Picture", "x910 y8 w60 h34 +BackgroundTrans cffffff", DiscordImage)
 CloseAppButton.OnEvent("Click", (*) => OpenDiscord())
 
+CloseAppButton := MainGUI.Add("Picture", "x820 y-20 w90 h90 +BackgroundTrans cffffff", TaxiImage)
+CloseAppButton.OnEvent("Click", (*) => OpenFaxiDiscord())
+
 MinimizeButton := MainGUI.Add("Picture", "x1000 y22 w37 h9 +BackgroundTrans cffffff", MinimizeImage)
 MinimizeButton.OnEvent("Click", (*) => MinimizeGUI())
 
@@ -176,17 +179,15 @@ PlacementTimerDropdownUI.SetFont("s8", "Segoe UI")
 PlacementTimerDropdownUI.Title := "Placement Timer Settings"
 global PlacementTimerDropdown := PlacementTimerDropdownUI.Add("DropDownList", "x10 y60 w250 cffffff Choose1", [1500, 2000, 2500, 3000, 3500])
 
-MainGUI.Add("Text", "x10 y5 h60 c00ff73 +BackgroundTrans", "Version: 1.0")
+MainGUI.Add("Text", "x10 y5 h60 c2bff00 +BackgroundTrans", "Version: 1.0")
 
 WebhookBtn := MainGui.Add("Button", "x965 y632 w105 cffffff +BackgroundTrans +Center", "Settings")
 WebhookBtn.OnEvent('Click', (*) => OpenSettings())
 
-MainGUI.Add("Picture", "x820 y-20 w90 h90 +BackgroundTrans cffffff", TaxiImage)
-
 MainGUI.AddProgress("c0x7e4141 x8 y27 h602 w800", 100) ; box behind roblox, credits to yuh for this idea
 WinSetTransColor("0x7e4141 255", MainGUI)
 
-MainGUI.Add("GroupBox", "x830 y60 w238 h250 cfffd90 ", "Unit Setup")
+MainGUI.Add("GroupBox", "x830 y60 w238 h250 c2bff00 ", "Unit Setup")
 enabled1 := MainGUI.Add("Checkbox", "x840 y80 cffffff", "Slot 1")
 enabled2 := MainGUI.Add("Checkbox", "x840 y110 cffffff", "Slot 2")
 enabled3 := MainGUI.Add("Checkbox", "x840 y140 cffffff", "Slot 3")
@@ -215,10 +216,10 @@ SaveConfigBttn := MainGUI.Add("Button", "x960 y270 w95 h30 cffffff +Center", "Sa
 SaveConfigBttn.OnEvent("Click", (*) => SaveConfig())
 
 
-MainGUI.Add("GroupBox", "x830 y320 w238 h210 cfffd90 ", "Activity Log ")
+MainGUI.Add("GroupBox", "x830 y320 w238 h210 c2bff00 ", "Activity Log ")
 ActivityLog := MainGUI.Add("Text", "x830 y340 w238 h300 r11 cffffff +BackgroundTrans +Center", "Be sure to enable click to move.")
 
-MainGUI.Add("GroupBox", "x830 y540 w238 h80 cfffd90 ", "Keybinds")
+MainGUI.Add("GroupBox", "x830 y540 w238 h80 c2bff00 ", "Keybinds")
 KeyBinds := MainGUI.Add("Text", "x830 y560 w238 h300 r7 cffffff +BackgroundTrans +Center", "F1 - Fix Roblox Position `n F2 - Start Macro `n F3 - Stop Macro")
 
 MainGUI.SetFont("s16 bold", "Segoe UI")
@@ -236,8 +237,12 @@ MinimizeGUI() {
     WinMinimize("Ryns Taxi Macro")
 }
 
-OpenDiscord() {
+OpenFaxiDiscord() {
     Run("https://discord.gg/UB9AaPzqdq")
+}
+
+OpenDiscord() {
+    Run("https://discord.gg/6DWgB9XMTV")
 }
 
 

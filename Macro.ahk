@@ -1,4 +1,5 @@
 ﻿; heavily edited by Ryn
+; card picker code from haie
 
 #Requires AutoHotkey v2.0
 #Include %A_ScriptDir%\Lib\gui.ahk
@@ -28,10 +29,12 @@ Matchmaking := "|<>*93$73.zzzzzzzzzzzzzzlzzzsszzzzk08zzzwATzzzs04Tzzy6Dzzzw03zzz
 AutoAbility := "|<>*83$21.zzzzzzzwD4S0kXl28wS03Xk0QSH7nWMy0n7sCQzzzzU"
 ClaimText := "|<>*127$71.00000000000000A7s01y000007zTs07w00000Tzlk0AQ00003k7VU0MM0000D03300kk0000Q0667zXzsw01k0AAzzzzzy031ysTrjTSyS0C7zky0AA0EQ0QCTVs0MM00Q0ss73U0kk00M1lkC711VVUUk3VnwC73333VU73zsQS666737y3tksQAAAC7zy01Uk0MMMQDzy030k0kkksTzy061U1VVVkzzz0y3kX77XXzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
 LoadingScreen := "|<>*94$71.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzznzzzzzzzzzzy1zzzzzzzzzzs1zzzzzzzzzzk3zzzzzzzzzz03zzzzzzzzzy07zzzzzzzzzs07zzzzzzzzzk0Dzzzzzzzzz00Dzzzzzzzzy00Tzzzzzzzzs00Tzzs3zzzzk00zzy00zzzz000zzk00Tzzy001zzU00Tzzw001zy000zzzk003zw001zzzU303zk007rzy0607zU3sTjzw0S07z0DzzTzk0w0Dy0DzyzzU3w0Dw00zx"
+WinterLoadingScreen := "|<>*98$87.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzwTzzzzzzzzzzzzX3zszzzzzszXzzsMTz7zzzzz7wDzz3XzszzzzzszVzzsTzz7zzzzz7wDkz3bwMz3szbszXs1sQS07U73sT7wS07XXU0w0QT7s03UkQQMA7b3Vkz00QD3XX3kzwCCDs03XwQQMz7s1llz7wQTXXX7sw0C4TszXXwQQMz73VsXz7wQD3XX3kswD0TszXk0wQQ0731w7z7wT0DXXU0s0DUzszXw3wQT17UFyDzzzzzzzzzzzzzlzzzzzzzzzzzzzgTw"
 P := "|<>*88$35.3zzzy0Tzzzy0zzzzy3zzzzw7zzzzsTzzzzszzzzzlzzzzzXzw1zz7zs1zyDzk1zwTzV3zszz73zlzyC7zXzwQTz7zs0zyDzk3zwTzVzzszz7zzlzyDzzXzwTzz7zzzzyDzzzzwTzzzzszzzzzkzzzzzVzzzzy1zzzzw3zzzzk3zzzz00zzzs0000000000004"
 P2 := "|<>*102$165.1zzzs000Dzzz0003zzzk000zzzw0zzzzk007zzzy001zzzzU00TzzzsDzzzz001zzzzs00Tzzzy007zzzzXzzzzw00TzzzzU07zzzzs01zzzzyTzzzzU03zzzzw00zzzzz00Dzzzzrzzzzy00zzzzzk0Dzzzzw03zzzzzzzzzzk07zw3zy01zzzzzU0Tzzzzzzzzzy00zy07zk0Dzzzzw03zlyDzzzzzzk07zU0Ty01zzzzzU0Ts30Tzzzzzy00zs01zk0Dzzzzw03y001zzz0zzk07y0k7y01zzzzzU0TU007zzvzzy00zU60Tk0Dzzzzw03w000zzzTzzk07w003y01zzzzTU0TU007zzvzzy00z000Dk0Dzzzzw03w000zzzzzzk07s0k1y01zzzzzU0TU007zzzzzy00z060Dk0Dzzzzw03y001zzzzzzk07s0k1y01zzzzzU0Tk00Dzzzzzy00z060Dk0Dzzzzw03z003zzzzzzk07s0k1y01zzzzzU0Tw00zzzzzzy00zU60Tk0Dzzzzw03zk0Dzzzzzzk07w0k3y01zzzzzU0Tz03zzzzzzy00zk60zk0Dzzzzw03zw0zzzzzzzk07z00Dy01zzzzzU0TzkDzzzzzzy00zw03zk0Dzzzzw03zzbzzzzzzzk07zk0zy01zzzzzU0Tzzzzzzzzzy00zzkzzk0Dzzzzw03zzzzzzzzzzk07zzzzy01zzzzzU0Tzzzzvzzzzw00TzzzzU07zzzzs01zzzzyTzzzzU03zzzzw00zzzzz00Dzzzzlzzzzs00Dzzzz003zzzzk00zzzzw7zzzy000zzzzk00Dzzzw003zzzz0Dzzz0001zzzs000Tzzy0007zzzUU"
 Priority := "|<>*92$70.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzs0000000000T00000000000s00000000001U0000000000600000000000M007zs000001U01zwU07U0060060200m000M00E1DvuA001U017zysss0060043W110U00M00E68442001U010MXkss006004TWD1X000M00Fu8x2C001U0168XUQ8006006En/1kU00M00D1zbxy001U0000870U00600000000000M00000000001k0000000000DU0000000001zzzzzzzzzzzzU"
 Spawn:="|<>*113$63.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzw3zzzzzzzzz0Dzzzzzzzzs1zzzzzzzzz7TTzxvzizzsTk7U4QMU7z0S0M0V240zw1k1068FU3zs6C8kk0AQTzslk7701XXz7648ks0QQTs0k307V3XXz0C0Q0wMwQTy3lDl7nbXXzzyDzzzzzzzzzlzzzzzzzzzyDzzzzzzzzznzzzzzzzw"
+DeathText := "|<>*100$22.zzzzUzUw3w3l7l6ASAMtstXbXaASAQFgFkAEDUlUzzzzU"
 
 global contractsEnabled := 1
 global winterEventEnabled := 0
@@ -62,6 +65,8 @@ InitializeMacro() {
         return
     }
     global MacroStartTime := A_TickCount
+    global loss := 0
+    global wins := 0
 
     if WinExist("Ryns Taxi Macro") {
         WinActivate("Ryns Taxi Macro")
@@ -111,10 +116,18 @@ GoToRaids() {
         sentTab := true
     }
     loop {
-        ; look for loading screen
-        if (ok := FindText(&X, &Y, 10, 70, 350, 205, 0, 0, LoadingScreen)) {
-            AddToLog("Found LoadingScreen, stopping loop")
-            break
+        ; look for contract loading screen
+        if (contractsEnabled) {
+            if (ok := FindText(&X, &Y, 10, 70, 350, 205, 0, 0, LoadingScreen)) {
+                AddToLog("Found Contract Loading Screen, stopping loop")
+                break
+            }
+        }
+        if (winterEventEnabled) {
+            if (ok := FindText(&X, &Y, 10, 70, 350, 205, 0, 0, WinterLoadingScreen)) {
+                AddToLog("Found Winter Event Loading Screen, stopping loop")
+                break
+            }
         }
         if (ok := FindText(&X, &Y, 326, 60, 547, 173, 0, 0, VoteStart)) {
             AddToLog("Found VoteStart, stopping loop")
@@ -169,7 +182,7 @@ GoToRaids() {
     }
     LoadedLoop()
     StartedLoop()
-    OnSpawnSetup()
+    ;OnSpawnSetup()
     TryPlacingUnits()
 
 }
@@ -925,16 +938,34 @@ IsMaxUpgrade() {
 }
 
 ShouldStopUpgrading(sleepamount := 300) {
+    global loss
+    global wins
     Sleep sleepamount
     if CheckForLobbyButton() {
         if (WebhookCheckbox.Value = 1) {
-            SendInput ("{Tab}")
-            Sleep 100
-            SendWebhook()
+            if Checkforloss() {
+                loss++
+                SendInput ("{Tab}")
+                Sleep 100
+                LossWebhook()
+            } else if !Checkforloss() {
+                wins++
+                SendInput ("{Tab}")
+                Sleep 100
+                sendWebhook()
+            }
         }
         BetterClick(376, 117)
         return true
     }
+}
+
+Checkforloss() {
+    if (ok:=FindText(&X, &Y, 368, 90, 497, 130, 0, 0, DeathText))
+    {
+        return true
+    }
+    return false
 }
 
 FindAndClickColor(targetColor := (winterEventEnabled = 1 ? 0x006783 : 0xFAFF4D), searchArea := [0, 0, A_ScreenWidth, A_ScreenHeight]) { ;targetColor := Winter Event Color : 0x006783 / Contracts Color : 0xFAFF4D
@@ -1001,38 +1032,25 @@ LoadedLoop() {
     AddToLog("Waiting to load in")
     loop {
         Sleep 1000
-        if (ok := FindText(&X, &Y, 326, 60, 547, 173, 0, 0, VoteStart))
-        {
+        if (ok := FindText(&X, &Y, 326, 60, 547, 173, 0, 0, VoteStart)) {
             global StageStartTime := A_TickCount
             AddToLog("Loaded in")
             if (hasReconnect == 1 && DisconnectCheckbox.Value == 1) {
                 sendRCWebhook()
                 hasReconnect := 0
             }
-            Sleep 1000
-            BetterClick(350, 103) ; click yes
-            BetterClick(350, 100) ; click yes
-            BetterClick(350, 97) ; click yes
-            Sleep 200
-            BetterClick(590, 15) ; click on P
             break
         }
-        else if (ok := FindText(&X, &Y, 629 - 150000, 67 - 150000, 629 + 150000, 67 + 150000, 0, 0, P))
-        {
+        else if (ok := FindText(&X, &Y, 606, 47, 648, 85, 0, 0, P)) {
             Sleep 10000
-            if (ok := FindText(&X, &Y, 629 - 150000, 67 - 150000, 629 + 150000, 67 + 150000, 0, 0, P) and (ok != FindText(&X, &Y, 326, 60, 547, 173, 0, 0, VoteStart))) {
+            if (ok := FindText(&X, &Y, 606, 47, 648, 85, 0, 0, P) and !(ok :=
+                FindText(&X, &Y, 326, 60, 547, 173, 0, 0, VoteStart))) {
                 global StageStartTime := A_TickCount
                 AddToLog("Loaded in late")
                 if (hasReconnect == 1 && DisconnectCheckbox.Value == 1) {
                     sendRCWebhook()
                     hasReconnect := 0
                 }
-                Sleep 1000
-                BetterClick(350, 103) ; click yes
-                BetterClick(350, 100) ; click yes
-                BetterClick(350, 97) ; click yes
-                Sleep 200
-                BetterClick(590, 15) ; click on P
                 break
             }
         }
@@ -1047,15 +1065,31 @@ LoadedLoop() {
 }
 
 StartedLoop() {
+    AddToLog("Spawn setup starting")
     loop {
+        Sleep 1000
+        if (ok := FindText(&X, &Y, 326, 60, 547, 173, 0, 0, VoteStart)) {
+            Sleep 1000
+			OnSpawnSetup()
+            break
+        }
+        break
+    }
+    AddToLog("Spawn setup done, waiting for vote start")
+    	BetterClick(350, 103) ; click yes
+        BetterClick(350, 100) ; click yes
+        BetterClick(350, 97) ; click yes
+	Sleep 100
+	loop {
         Sleep 1000
         if (ok := FindText(&X, &Y, 326, 60, 547, 173, 0, 0, VoteStart))
         {
             continue
         }
-        AddToLog("Game started")
         break
     }
+    AddToLog("Game started, waiting 6s for income")
+	Sleep(6000)
 }
 
 LobbyLoop() {
@@ -1286,6 +1320,8 @@ OnSpawnSetup() {
     Sleep 200
     ;TapToMove(true)
     Sleep 200
+    BetterClick(590, 15) ; click on paths
+    Sleep 200
     AddToLog("Attempting to move to spot")
     loop 80 {
         Sleep 100
@@ -1295,7 +1331,7 @@ OnSpawnSetup() {
         }
     }
     Sleep 4000
-    BetterClick(590, 15) ; click on P
+    BetterClick(590, 15) ; click on paths
     Sleep 1000
     ;TapToMove(false)
 
