@@ -36,9 +36,9 @@ Priority := "|<>*92$70.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzs0000000000T0000000000
 Spawn:="|<>*113$63.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzw3zzzzzzzzz0Dzzzzzzzzs1zzzzzzzzz7TTzxvzizzsTk7U4QMU7z0S0M0V240zw1k1068FU3zs6C8kk0AQTzslk7701XXz7648ks0QQTs0k307V3XXz0C0Q0wMwQTy3lDl7nbXXzzyDzzzzzzzzzlzzzzzzzzzyDzzzzzzzzznzzzzzzzw"
 DeathText := "|<>*100$22.zzzzUzUw3w3l7l6ASAMtstXbXaASAQFgFkAEDUlUzzzzU"
 
-global contractsEnabled := 1
-global winterEventEnabled := 0
-global matchmakingEnabled := 1
+global contractsEnabled := Contracts.Value
+global winterEventEnabled := WinterEvent.Value
+global matchmakingEnabled := MatchmakingOrSolo.Value
 global hasReconnect := 0
 global sentTab := false
 
@@ -84,7 +84,7 @@ InitializeMacro() {
 
     if (ok := FindText(&X, &Y, 746, 476, 862, 569, 0, 0, AreasText)) {
         if (!winterEventEnabled && !contractsEnabled) {
-            MsgBox("You must select a game mode before starting the macro", "Please select a game mode", "+0x1000",)
+            MsgBox("You must select a gamemode before starting the macro", "Please select a game mode", "+0x1000",)
             return
         }
         GoToRaids()
@@ -134,7 +134,7 @@ GoToRaids() {
             }
         }
         if (ok := FindText(&X, &Y, 326, 60, 547, 173, 0, 0, VoteStart)) {
-            AddToLog("Found VoteStart, stopping loop")
+            AddToLog("Found Vote Start, stopping loop")
             break
         }
         if (ok := FindText(&X, &Y, 338, 505, 536, 572, 0, 0, ClaimText)) ; daily reward
