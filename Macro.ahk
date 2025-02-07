@@ -90,7 +90,7 @@ InitializeMacro() {
             MsgBox("You must select a gamemode before starting the macro", "Please select a game mode", "+0x1000",)
             return
         }
-        GoToRaids()
+        StartMacro()
     }
     else {
         MsgBox("You must be in the lobby with default camera angle to start the macro.", "Error T3", "+0x1000",)
@@ -116,7 +116,7 @@ BetterClick(x, y, LR := "Left") { ; credits to yuh for this, lowk a life saver
     Sleep(50)
 }
 
-GoToRaids() {
+StartMacro() {
     global sentTab
     if (sentTab = false) {
         SendInput ("{Tab}")
@@ -126,26 +126,26 @@ GoToRaids() {
         ; look for contract loading screen
         if (contractsEnabled) {
             if (ok := FindText(&X, &Y, 10, 70, 350, 205, 0, 0, LoadingScreen)) {
-                AddToLog("Found Contract Loading Screen, stopping loop")
+                AddToLog("Found Contract Loading Screen")
                 break
             }
         }
         if (winterEventEnabled) {
             if (ok := FindText(&X, &Y, 10, 70, 350, 205, 0, 0, WinterLoadingScreen)) {
-                AddToLog("Found Winter Event Loading Screen, stopping loop")
+                AddToLog("Found Winter Event Loading Screen")
                 break
             }
         }
         if (ok := FindText(&X, &Y, 326, 60, 547, 173, 0, 0, VoteStart)) {
-            AddToLog("Found Vote Start, stopping loop")
+            AddToLog("Found Vote Start")
             break
         }
-        if (ok := FindText(&X, &Y, 338, 505, 536, 572, 0, 0, ClaimText)) ; daily reward
-        {
+        if (ok := FindText(&X, &Y, 338, 505, 536, 572, 0, 0, ClaimText)) {
+            AddToLog("Found Daily Reward, claiming..")
             BetterClick(406, 497)
             Sleep 3000
         }
-        if (contractsEnabled = 1) {
+        if (contractsEnabled) {
             ; Start Contract Macro
             BetterClick(32, 400) ; click contract button
             Sleep 2000
@@ -168,7 +168,7 @@ GoToRaids() {
                 BetterClick(310, 415) ; click matchmaking on fourth contract
             }
         }
-        if (winterEventEnabled = 1) {
+        if (winterEventEnabled) {
             ; go to winter event
             BetterClick(89, 302)
             Sleep 2000
@@ -180,7 +180,11 @@ GoToRaids() {
             SendInput ("{a up}")
             KeyWait "a" ; Wait for "d" to be fully processed
             Sleep 1200
-            BetterClick(469, 340) ; play
+            if (matchmakingEnabled) {
+                BetterClick(469, 340) ; click matchmaking
+            } else {
+                BetterClick(340, 340) ; click play here
+            }
         }
         Sleep 2000
         if (matchmakingEnabled) {
@@ -811,7 +815,6 @@ UpgradeUnits() {
                     AddToLog("Found return to lobby, going back.")
                     successfulCoordinates := []
                     maxedCoordinates := []
-                    sentTab := false
                     return LobbyLoop()
                 }
 
@@ -820,11 +823,9 @@ UpgradeUnits() {
                 if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) {
                     BetterClick(373, 237)
                 }
-
-                if (winterEventEnabled = 1 && (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card))) {
+                if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card)) {
                     cardSelector()
                 }
-
                 BetterClick(348, 391) ; next
                 BetterClick(565, 563) ; move mouse
                 Reconnect()
@@ -844,6 +845,9 @@ UpgradeUnits() {
         while !ShouldStopUpgrading() {
             BetterClick(348, 391) ; next
             Sleep(200)
+            if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card)) {
+                cardSelector()
+            }
         }
 
         return LobbyLoop()
@@ -879,9 +883,9 @@ UpgradeUnits() {
                 {
                     BetterClick(373, 237)
                 }
-
-                if (winterEventEnabled = 1 && (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card))) {
+                if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card)) { ; CARD PICKER
                     cardSelector()
+                    ;AddToLog("Succesfully picked card")
                 }
                 BetterClick(348, 391) ; next
                 BetterClick(565, 563) ; move mouse
@@ -891,6 +895,10 @@ UpgradeUnits() {
             ; If all units are maxed, still check for stopping condition
             if successfulCoordinates.Length = 0 and maxedCoordinates.Length > 0 {
                 Reconnect()
+                if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card)) { ; CARD PICKER
+                    cardSelector()
+                    ;AddToLog("Succesfully picked card")
+                }
                 BetterClick(348, 391) ; next
                 if ShouldStopUpgrading() {
                     AddToLog("Stopping due to finding return to lobby button.")
@@ -931,9 +939,12 @@ SortByPriority(&array, priorityMapping) {
 
 UpgradeUnit(x, y) {
     BetterClick(x, y - 3)
-    BetterClick(264, 363) ; upgrade
-    BetterClick(264, 363) ; upgrade
-    BetterClick(264, 363) ; upgrade
+    SendInput ("R")
+    SendInput ("R")
+    SendInput ("R")
+    ;BetterClick(264, 363) ; upgrade
+    ;BetterClick(264, 363) ; upgrade
+    ;BetterClick(264, 363) ; upgrade
 }
 
 IsMaxUpgrade() {
@@ -975,7 +986,7 @@ Checkforloss() {
     return false
 }
 
-FindAndClickColor(targetColor := (winterEventEnabled = 1 ? 0x006783 : 0xFAFF4D), searchArea := [0, 0, A_ScreenWidth, A_ScreenHeight]) { ;targetColor := Winter Event Color : 0x006783 / Contracts Color : 0xFAFF4D
+FindAndClickColor(targetColor := (winterEventEnabled ? 0x006783 : 0xFAFF4D), searchArea := [0, 0, A_ScreenWidth, A_ScreenHeight]) { ;targetColor := Winter Event Color : 0x006783 / Contracts Color : 0xFAFF4D
     ; Extract the search area boundaries
     x1 := searchArea[1], y1 := searchArea[2], x2 := searchArea[3], y2 := searchArea[4]
 
@@ -986,7 +997,8 @@ FindAndClickColor(targetColor := (winterEventEnabled = 1 ? 0x006783 : 0xFAFF4D),
         AddToLog("Color found and clicked at: X" foundX " Y" foundY)
         return true
 
-    } else {
+    }
+    /* else {
         if (winterEventEnabled = 1) {
             AddToLog("Color not found, trying green")
             if (PixelSearch(&foundX, &foundY, x1, y1, x2, y2, 0x94FF45, 0)) { ;Green Path
@@ -1006,7 +1018,7 @@ FindAndClickColor(targetColor := (winterEventEnabled = 1 ? 0x006783 : 0xFAFF4D),
                 }
             }
         }
-    }
+    }*/
 }
 
 
@@ -1110,8 +1122,8 @@ LobbyLoop() {
         }
         Reconnect()
     }
-    AddToLog("Returned to lobby, going back to raids")
-    return GoToRaids()
+    AddToLog("Returned to lobby, going back to " winterEventEnabled ? "winter event" : "contracts")
+    return StartMacro()
 }
 
 CheckForLobbyButton() {
@@ -1259,20 +1271,16 @@ CaptchaSleep() {
         AddToLog("Sleeping for 2 seconds")
     }
     if (captchaDelay = 2) {
-        Sleep 4000
-        AddToLog("Sleeping for 4 seconds")
+        Sleep 5000
+        AddToLog("Sleeping for 5 seconds")
     }
     if (captchaDelay = 3) {
-        Sleep 6000
-        AddToLog("Sleeping for 6 seconds")
+        Sleep 7000
+        AddToLog("Sleeping for 7 seconds")
     }
     if (captchaDelay = 4) {
-        Sleep 8000
-        AddToLog("Sleeping for 8 seconds")
-    }
-    if (captchaDelay = 5) {
-        AddToLog("Sleeping for 10 seconds")
         Sleep 10000
+        AddToLog("Sleeping for 10 seconds")
     }
 }
 
@@ -1332,13 +1340,28 @@ OnSpawnSetup() {
     BetterClick(590, 15) ; click on paths
     Sleep 200
     AddToLog("Attempting to move to spot")
-    loop 80 {
+    loop {
+        if FindAndClickColor() {
+            break
+        }
+        else {
+            AddToLog("Color not found. Turning again.")
+            SendInput ("{Left up}")
+            Sleep 200
+            SendInput ("{Left down}")
+            Sleep 750
+            SendInput ("{Left up}")
+            KeyWait "Left" ; Wait for key to be fully processed
+            Sleep 200
+        }
+    }
+    /*loop 80 {
         Sleep 100
 
         if FindAndClickColor() {
             break
         }
-    }
+    }*/
     Sleep 4000
     BetterClick(590, 15) ; click on paths
     Sleep 1000
@@ -1394,7 +1417,7 @@ Reconnect() {
 			Sleep 1000
             if (ok := FindText(&X, &Y, 746, 476, 862, 569, 0, 0, AreasText)) {
                 AddToLog("Reconnected Successfully!")
-                return GoToRaids() ; start
+                return StartMacro() ; start
             }
 
             retries++ ; Increment the retry count
@@ -1459,19 +1482,30 @@ ConnectPS() {
 
 cardSelector() {
     AddToLog("Picking card in priority order")
-    if (ok := FindText(&X, &Y, 78, 182, 400, 451, 0, 0, UnitExistence)) {
+    if (ok := FindText(&X, &Y, 200, 239, 276, 270, 0, 0, UnitExistence)) {
         BetterClick(329, 184) ; close upg menu
         sleep 100
     }
 
     BetterClick(59, 572) ; Untarget Mouse
-    sleep 500
+    sleep 100
 
     for index, priority in priorityOrder {
         if (!textCards.Has(priority)) {
+			AddToLog(Format("Card {} not available in textCards", priority))																
             continue
         }
         if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, textCards.Get(priority))) {
+			
+			if (priority == "yen") {
+				if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, yen2)) {
+					AddToLog("Found yen 2")
+				}
+				else {
+					AddToLog("Found yen 1")
+				}
+			}
+	
             FindText().Click(cardX, cardY, 0)
             MouseMove 0, 10, 2, "R"
             Click 2
@@ -1484,124 +1518,4 @@ cardSelector() {
         }
     }
     AddToLog("Failed to pick a card")
-}
-
-;Added by @raynnpjl
-cardSelectorBackup() {
-    AddToLog("Picking card")
-    if (ok := FindText(&X, &Y, 78, 182, 400, 451, 0, 0, UnitExistence)) {
-        BetterClick(329, 184) ; close upg menu
-        sleep 100
-    }
-    Click "256 334 0" ; Card Select 1
-    sleep 100
-    Click "403 334 0" ; Card Select 2
-    sleep 100
-    Click "547 334 0" ; Card Select 3
-    sleep 100
-    BetterClick(59, 572) ; Untarget Mouse
-    sleep 500
-    if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, new_path)) {
-        FindText().Click(cardX, cardY, 0)
-        MouseMove 0, 10, 2, "R"
-        Click 2
-        sleep 1000
-        MouseMove 0, 120, 2, "R"
-        Click 2
-        AddToLog("Picked new_path")
-        sleep 5000
-    }
-    else if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, shield)) {
-        FindText().Click(cardX, cardY, 0)
-        MouseMove 0, 10, 2, "R"
-        Click 2
-        sleep 1000
-        MouseMove 0, 120, 2, "R"
-        Click 2
-        AddToLog("Picked enemy shield")
-        sleep 5000
-    }
-    else if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, health)) {
-        FindText().Click(cardX, cardY, 0)
-        MouseMove 0, 10, 2, "R"
-        Click 2
-        sleep 1000
-        MouseMove 0, 120, 2, "R"
-        Click 2
-        AddToLog("Picked enemy health")
-        sleep 5000
-    }
-    else if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, regen)) {
-        FindText().Click(cardX, cardY, 0)
-        MouseMove 0, 10, 2, "R"
-        Click 2
-        sleep 1000
-        MouseMove 0, 120, 2, "R"
-        Click 2
-        AddToLog("Picked enemy regen")
-        sleep 5000
-    }
-    else if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, explosive_death)) {
-        FindText().Click(cardX, cardY, 0)
-        MouseMove 0, 10, 2, "R"
-        Click 2
-        sleep 1000
-        MouseMove 0, 120, 2, "R"
-        Click 2
-        AddToLog("Picked explosive_death")
-        sleep 5000
-    }
-    else if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, speed)) {
-        FindText().Click(cardX, cardY, 0)
-        MouseMove 0, 10, 2, "R"
-        Click 2
-        sleep 1000
-        MouseMove 0, 120, 2, "R"
-        Click 2
-        AddToLog("Picked enemy speed")
-        sleep 5000
-    }
-    else if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, range)) {
-        FindText().Click(cardX, cardY, 0)
-        MouseMove 0, 10, 2, "R"
-        Click 2
-        sleep 1000
-        MouseMove 0, 120, 2, "R"
-        Click 2
-        AddToLog("Picked range buff")
-        sleep 5000
-    }
-    else if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, attack)) {
-        FindText().Click(cardX, cardY, 0)
-        MouseMove 0, 10, 2, "R"
-        Click 2
-        sleep 1000
-        MouseMove 0, 120, 2, "R"
-        Click 2
-        AddToLog("Picked attack buff")
-        sleep 5000
-    }
-    else if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, cooldown)) {
-        FindText().Click(cardX, cardY, 0)
-        MouseMove 0, 10, 2, "R"
-        Click 2
-        sleep 1000
-        MouseMove 0, 120, 2, "R"
-        Click 2
-        AddToLog("Picked cooldown")
-        sleep 5000
-    }
-    else if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, yen)) {
-        FindText().Click(cardX, cardY, 0)
-        MouseMove 0, 10, 2, "R"
-        Click 2
-        sleep 1000
-        MouseMove 0, 120, 2, "R"
-        Click 2
-        AddToLog("Picked yen buff")
-        sleep 5000
-    }
-    else {
-        AddToLog("Failed to pick a card")
-    }
 }
