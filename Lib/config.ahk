@@ -7,7 +7,7 @@
 SaveConfig(*) {
     global enabled1, enabled2, enabled3, enabled4, enabled5, enabled6
     global placement1, placement2, placement3, placement4, placement5, placement6
-    global WinterEvent, Contracts, CaptchaTimer, UnitTimer
+    global CaptchaTimer, UnitTimer, GamemodeDropDown
 
     SaveChoiceGui.Show("AutoSize Center")
     return
@@ -16,7 +16,7 @@ SaveConfig(*) {
 LoadConfig(*) {
     global enabled1, enabled2, enabled3, enabled4, enabled5, enabled6
     global placement1, placement2, placement3, placement4, placement5, placement6
-    global WinterEvent, Contracts, CaptchaTimer, UnitTimer
+    global CaptchaTimer, UnitTimer, GamemodeDropDown
 
     LoadChoiceGui.Show("AutoSize Center")
     return
@@ -39,7 +39,7 @@ StringJoin(delimiter, arr) {
 }
 
 SaveConfigToFile(filePath) {
-    global hotkey1, hotkey2, hotkey3, PlacementDropdown, CaptchaTimer, UnitTimer
+    global hotkey1, hotkey2, hotkey3, PlacementDropdown, CaptchaTimer, UnitTimer, GamemodeDropDown
     directory := "Lib\Settings"
 
     if !DirExist(directory) {
@@ -117,11 +117,14 @@ SaveConfigToFile(filePath) {
     File.WriteLine("[Matchmaking]")
     File.WriteLine("Enabled=" MatchmakingOrSolo.Value)
 
-    File.WriteLine("[WinterEvent]")
-    File.WriteLine("Enabled=" WinterEvent.Value)
+    File.WriteLine("[AutoAbility]")
+    File.WriteLine("Enabled=" Ability.Value)
 
-    File.WriteLine("[Contracts]")
-    File.WriteLine("Enabled=" Contracts.Value)
+    File.WriteLine("[ReturnToLobby]")
+    File.WriteLine("Enabled=" ReturnToLobby.Value)
+
+    File.WriteLine("[Mode]")
+    File.WriteLine("Mode=" GamemodeDropDown.Value)
 
     File.Close()
     AddToLog("Configuration saved successfully to " filePath ".`nIf you changed keybinds, you will have to restart the macro.`n")
@@ -132,7 +135,7 @@ LoadConfigFromFile(filePath) {
     global placement1, placement2, placement3, placement4, placement5, placement6
     global dropDowns, ChatToSend, ChatStatusBox, WebhookURL, WebhookCheckbox, DisconnectCheckbox, UUPCheckbox
     global hotkey1, hotkey2, hotkey3
-    global WinterEvent, Contracts, PlacementDropdown, MatchmakingOrSolo
+    global Ability, ReturnToLobby, PlacementDropdown, MatchmakingOrSolo
     global CaptchaTimer, UnitTimer
 
     if !FileExist(filePath) {
@@ -145,6 +148,9 @@ LoadConfigFromFile(filePath) {
         PlacementDropdown.Value := 6
         CaptchaTimer.Value := 2
         UnitTimer.Value := 2
+        GamemodeDropDown.Value := 1
+        ReturnToLobby.Value := 0
+        Ability.Value := 1
     } else {
         ; Open file for reading
         file := FileOpen(filePath, "r", "UTF-8")
@@ -194,14 +200,14 @@ LoadConfigFromFile(filePath) {
                     MatchmakingOrSolo.Value := match.1
                 }
             }
-            else if (section = "WinterEvent") {
+            else if (section = "AutoAbility") {
                 if RegExMatch(line, "Enabled=(\d+)", &match) {
-                    WinterEvent.Value := match.1
+                    Ability.Value := match.1
                 }
             }
-            else if (section = "Contracts") {
+            else if (section = "ReturnToLobby") {
                 if RegExMatch(line, "Enabled=(\d+)", &match) {
-                    Contracts.Value := match.1
+                    ReturnToLobby.Value := match.1
                 }
             }
             else if (section = "WebhookSettings") {
@@ -255,6 +261,11 @@ LoadConfigFromFile(filePath) {
             else if (section = "UnitTimer") {
                 if RegExMatch(line, "Time=(\d+)", &match) {
                     UnitTimer.Value := match.1 ; Set the checkbox value
+                }
+            }
+            else if (section = "Mode") {
+                if RegExMatch(line, "Mode=(\d+)", &match) {
+                    GamemodeDropDown.Value := match.1 ; Set the checkbox value
                 }
             }
         }

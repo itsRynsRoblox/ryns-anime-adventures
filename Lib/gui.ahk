@@ -48,11 +48,32 @@ GuideBttn.OnEvent("Click", (*) => OpenGuide())
 ConnectPSBttn := MainGui.Add("Button", "x830 y632 w98 cffffff +BackgroundTrans +Center", "Connect to PS")
 ConnectPSBttn.OnEvent("Click", (*) => ConnectPS())
 
-UnitTimer := MainGui.Add("DropDownList", "x603 y667 w90 Choose2", ["1.5s", "2s (Default)", "2.5s", "3s"])
-MainGUI.Add("Text", "x500 y670 h60 c2bff00 +BackgroundTrans", "Placement Speed")
+UnitTimer := MainGui.Add("DropDownList", "x703 y667 w90 Choose2", ["1.5s", "2s (Default)", "2.5s", "3s"])
+MainGUI.Add("Text", "x600 y670 h60 c2bff00 +BackgroundTrans", "Placement Speed")
 
-CaptchaTimer := MainGui.Add("DropDownList", "x395 y667 w90 Choose2", ["2s", "5s (Default)", "7s", "10s"])
-MainGUI.Add("Text", "x310 y670 h60 c2bff00 +BackgroundTrans", "Captcha Retry")
+CaptchaTimer := MainGui.Add("DropDownList", "x495 y667 w90 Choose2", ["2s", "5s (Default)", "7s", "10s"])
+MainGUI.Add("Text", "x410 y670 h60 c2bff00 +BackgroundTrans", "Captcha Retry")
+
+GamemodeDropDown := MainGui.Add("DropDownList", "x295 y667 w105 Choose2", ["Academy Infinite", "Contracts", "Cursed Womb", "Winter Event"])
+MainGUI.Add("Text", "x210 y670 h60 c2bff00 +BackgroundTrans", "Mode Select")
+
+GamemodeDropDown.OnEvent("Change", OnModeChange)
+
+OnModeChange(*) {
+    global mode
+    selected := GamemodeDropDown.Text
+    
+    if (selected = "Academy Infinite") {
+        mode := "Academy Infinite"
+    } else if (selected = "Cursed Womb") {
+        mode := "Cursed Womb"
+        MsgBox("This macro works fine most of the time, but currently the macro is NOT setup to detect if you are over your cursed token limits.", "Use Cursed Womb At Your Own Risk!", "+0x1000",)
+    } else if (selected = "Winter Event") {
+        mode := "Winter Event"
+    } else if (selected = "Contracts") {
+        mode := "Contracts"
+    }
+}
 
 #Requires AutoHotkey v2.0
 #MaxThreadsPerHotkey 2
@@ -112,34 +133,27 @@ OpenSettings() {
     MainSettings.Show("AutoSize Center")
 }
 
-Contracts := MainGUI.Add("Checkbox", "x430 y648 w105 c2bff00 Checked", "Contracts")
-Contracts.OnEvent('Click', (*) => changeContracts())
+Ability := MainGUI.Add("Checkbox", "x210 y648 w105 c2bff00 Checked", "Auto Ability")
+Ability.OnEvent('Click', (*) => changeAutoAbility())
 
-changeContracts() {
-    global contractsEnabled := Contracts.Value
-    global winterEventEnabled
-    if (winterEventEnabled) {
-        AddToLog("Disabling Winter Event")
-        global winterEventEnabled := !Contracts.Value
-        WinterEvent.Value := winterEventEnabled
-    }
+changeAutoAbility() {
+    global autoAbilityEnabled := Ability.Value
 }
 
-WinterEvent := MainGUI.Add("Checkbox", "x320 y648 w105 c2bff00", "Winter Event")
-WinterEvent.OnEvent('Click', (*) => changeWinterEvent())
+ReturnToLobby := MainGUI.Add("Checkbox", "x650 y648 w115 c2bff00 ", "Return to Lobby")
+ReturnToLobby.OnEvent('Click', (*) => changeReturnToLobby())
 
-changeWinterEvent() {
-    global contractsEnabled
-    global winterEventEnabled := WinterEvent.Value
-    if (contractsEnabled) {
-        AddToLog("Disabling Contracts")
-        global contractsEnabled := !WinterEvent.Value
-        Contracts.Value := contractsEnabled
-    }
-
+changeReturnToLobby() {
+    global returnToLobbyEnabled := ReturnToLobby.Value
 }
 
-MatchmakingOrSolo := MainGUI.Add("Checkbox", "x210 y648 w105 c2bff00 Checked", "Matchmaking")
+;WinterEvent := MainGUI.Add("Checkbox", "x320 y648 w105 c2bff00", "Winter Event")
+;WinterEvent.OnEvent('Click', (*) => changeWinterEvent())
+
+;CursedWomb := MainGUI.Add("Checkbox", "x540 y648 w105 c2bff00 ", "Cursed Womb")
+;CursedWomb.OnEvent('Click', (*) => changeCursedWomb())
+
+MatchmakingOrSolo := MainGUI.Add("Checkbox", "x430 y648 w105 c2bff00 Checked", "Matchmaking")
 MatchmakingOrSolo.OnEvent('Click', (*) => changeMatchmaking())
 
 changeMatchmaking() {

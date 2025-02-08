@@ -1,6 +1,7 @@
 #Include %A_ScriptDir%\Lib\Discord-Webhook-master\lib\WEBHOOK.ahk
 #Include %A_ScriptDir%\Macro.ahk
 #Include %A_ScriptDir%\Lib\Gdip_All.ahk
+#Include %A_ScriptDir%\Lib\gui.ahk
 
 /*
 Request:
@@ -16,10 +17,27 @@ RobloxWindow := "ahk_exe RobloxPlayerBeta.exe" ; in my other version
 DoubleMonitorIssue := false ; other version too its in beta sorry
 
 ; webhook footer text 😎
-lossyapp := [
+winterEventLossYap := [
     'buddy give up u aint getting aizen 🤓',
     'i dont think dark mage wants u bro 💔',
-    'yeah ur cooked ggs'
+    'you aint getting nirvana lil bro'
+]
+lossyapp := [
+    "yeah ur cooked ggs",
+    "better luck next time, chief",
+    "held that L like a champ",
+    "ouch, that one hurt",
+    "L taken, lessons learned",
+    "gg, try again maybe?",
+    "skill issue detected",
+    "you fought bravely... kinda",
+    "close, but not close enough",
+    "down but not out, right?",
+    "you got humbled real quick",
+    "next time, bring backup",
+    "insert sad violin music",
+    "error 404: win not found",
+    "that was not very cash money of you"
 ]
 winyap := [
     'u were js lucky bro dont get it twisted',
@@ -97,7 +115,11 @@ sendWebhook() {
     myEmbed.setColor(0x600AB0)
     myEmbed.setImage(attachment)
     for _,_ in winyap {
-        myEmbed.setFooter({ text:lossyapp[Random(1,lossyapp.Length)] })
+        if (GamemodeDropDown.Text = "Winter Event") {
+            myEmbed.setFooter({ text:winterEventLossYap[Random(1, winterEventLossYap.Length)] })
+        } else {
+            myEmbed.setFooter({ text:lossyapp[Random(1, lossyapp.Length)] })
+        }
     }
 
     try {
