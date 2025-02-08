@@ -1,8 +1,8 @@
-# Anime Adventures Assassin Contract Macro
+# Ryn's Anime Adventures Macro
 
 A quality-of-life rewrite of the **Anime Adventures Macro** originally developed by [Taxi Macro](https://discord.gg/taximacro). This version adds community-requested features and additional improvements to enhance usability and functionality.
 
-This macro is specifically designed for the **Assassin Contracts** in Anime Adventures.
+This macro is specifically designed for Anime Adventures.
 
 ## Features
 
@@ -21,7 +21,6 @@ This macro is specifically designed for the **Assassin Contracts** in Anime Adve
 ## Removed Features
 
 - **Auto Updates**: Never trust an autohotkey script to auto update.
-- **Card Selection**: This was used for the winter event version of the old macro.
 
 ---
 
@@ -54,7 +53,8 @@ The macro includes configurable options for a personalized experience:
 
 - **Unit placement**: Adjust what units the macro should use in-game.
 - **Placement count preferences**: Adjust how many units should the macro place of each selected unit.
-- **Event Priorities**: Toggle between Winter Event and upcoming Halloween Event.
+- **Upgrade priority preferences**: Adjust what units should the macro upgrade first.
+- **Game Mode Selection**: Toggle between Winter Event/Contracts/Haunted Academy Infinite/Cursed Womb
 
 ---
 
@@ -73,7 +73,8 @@ The macro includes configurable options for a personalized experience:
 
 ## Contributions
 
-Want to help improve this version? Fork the repository and submit a pull request with your enhancements or fixes.
+- Haie (@itshaies) -For their card selection priority & webhook format)
+- Zredlohtop (@zredlohtop) - For their help with Cursed Womb
 
 ---
 
