@@ -1451,21 +1451,6 @@ AntiCaptcha() {
     return
 }
 
-DetectCards() {
-    ; Perform OCR on the defined region
-    ocrResult := OCR.FromRect(266, 309, 603 - 266, 352 - 309, , 2)
-
-    ; Check for specific card text variations
-    if (InStr(ocrResult.Text, "Enemy Health I")) {
-        AddToLog("Found Enemy Health I")
-    } else if (InStr(ocrResult.Text, "Enemy Speed I")) {
-        AddToLog("Found Enemy Speed I")
-    } else {
-        AddToLog("Unrecognized card detected: " ocrResult.Text)
-        ; Handle other cases if needed
-    }
-}
-
 CaptchaSleep() {
     if (captchaDelay = 1) {
         Sleep 2000
@@ -1722,7 +1707,6 @@ ConnectPS() {
 }
 
 cardSelector() {
-    DetectCards()
     AddToLog("Picking card in priority order")
     if (ok := FindText(&X, &Y, 200, 239, 276, 270, 0, 0, UnitExistence)) {
         BetterClick(329, 184) ; close upg menu
