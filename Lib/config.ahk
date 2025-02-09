@@ -81,9 +81,10 @@ SaveConfigToFile(filePath) {
     File.WriteLine("Placement6=" placement6.Text)
 
     File.WriteLine("[CardPriority]")
-    for index, dropDown in dropDowns {
-        File.WriteLine(Format("Enabled{}={}", index + 1, dropDown.Value))
-    }
+    for index, dropDown in dropDowns
+        {
+        File.WriteLine(Format("Card{}={}", index+1, dropDown.Text))
+        }
 
     File.WriteLine("[ChatSettings]")
     File.WriteLine("MessageToSend=" ChatToSend.Value)
@@ -198,6 +199,20 @@ LoadConfigFromFile(filePath) {
             else if (section = "Matchmaking") {
                 if RegExMatch(line, "Enabled=(\d+)", &match) {
                     MatchmakingOrSolo.Value := match.1
+                }
+            }
+            else if (section = "CardPriority") {
+                if RegExMatch(line, "Card(\d+)=(\w+)", &match) {
+                    slot := match.1
+                    value := match.2
+
+                    priorityOrder[slot - 1] := value
+
+                    dropDown := dropDowns[slot - 1]
+
+                    if (dropDown) {
+                        dropDown.Text := value
+                    }
                 }
             }
             else if (section = "AutoAbility") {

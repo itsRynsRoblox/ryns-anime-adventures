@@ -197,7 +197,6 @@ StartMacro() {
     }
     LoadedLoop()
     StartedLoop()
-    ;OnSpawnSetup()
     TryPlacingUnits()
 
 }
@@ -1174,27 +1173,6 @@ FindAndClickColor(targetColor := (GamemodeDropDown.Text = "Winter Event" ? 0x006
         return true
 
     }
-    /* else {
-        if (winterEventEnabled = 1) {
-            AddToLog("Color not found, trying green")
-            if (PixelSearch(&foundX, &foundY, x1, y1, x2, y2, 0x94FF45, 0)) { ;Green Path
-                ; Color found, click on the detected coordinates
-                BetterClick(foundX, foundY, "Right")
-                AddToLog("Color found and clicked at: X" foundX " Y" foundY)
-                return true
-    
-            } else {
-                AddToLog("Color not found, trying pink")
-                if (PixelSearch(&foundX, &foundY, x1, y1, x2, y2, 0xFF00FF, 0)) { ;Pink Path
-                    ; Color found, click on the detected coordinates
-                    BetterClick(foundX, foundY, "Right")
-                    AddToLog("Color found and clicked at: X" foundX " Y" foundY)
-                    return true
-    
-                }
-            }
-        }
-    }*/
 }
 
 OnSpawn() {
@@ -1304,7 +1282,6 @@ LobbyLoop() {
 }
 
 CheckForLobbyButton() {
-    ;if (ok := FindText(&X, &Y, 273, 103, 482, 214, 0, 0, LobbyText)) {
     if (ok:=FindText(&X, &Y, 28-150000, 12-150000, 28+150000, 12+150000, 0, 0, LobbyText)) {
         return true
     }
@@ -1469,20 +1446,13 @@ CaptchaSleep() {
 }
 
 PlacementTimerSleep() { ; Added for custom dropdown support
-    if (unitPlacementDelay = 1) {
-        Sleep 1500
-    }
-    if (unitPlacementDelay = 2) {
-        Sleep 2000
-    }
-    if (unitPlacementDelay = 3) {
-        Sleep 2500
-    }
-    if (unitPlacementDelay = 4) {
-        Sleep 3000
-    }
-    if (unitPlacementDelay = 5) {
-        Sleep 3500
+    switch unitPlacementDelay {
+        case 1: Sleep 1500
+        case 2: Sleep 2000
+        case 3: Sleep 2500
+        case 4: Sleep 3000
+        case 5: Sleep 3500
+        case 6: Sleep 4000    
     }
 }
 
@@ -1723,19 +1693,80 @@ cardSelector() {
 
     for index, priority in priorityOrder {
         if (!textCards.Has(priority)) {
-            AddToLog(Format("Card {} not available in textCards", priority))
+			AddToLog(Format("Card {} not available in textCards", priority))																
             continue
         }
         if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, textCards.Get(priority))) {
-
-            if (priority == "yen") {
-                if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, yen2)) {
-                    AddToLog("Found yen 2")
+			
+			if (priority == "shield") {
+                if (RadioHighest.Value == 1) {
+                    AddToLog("Picking highest shield debuff")
+                    if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, shield3)) {
+                        AddToLog("Found shield 3")
+                    }
+                    else if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, shield2)) {
+                        AddToLog("Found shield 2")
+                    }
+                    else if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, shield1)) {
+                        AddToLog("Found shield 1")
+                    }
                 }
-                else {
-                    AddToLog("Found yen 1")
+
+            }
+
+            else if (priority == "speed") {
+                if (RadioHighest.Value == 1) {
+                    AddToLog("Picking highest speed debuff")
+                    if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, speed3)) {
+                        AddToLog("Found speed 3")
+                    }
+                    else if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, speed2)) {
+                        AddToLog("Found speed 2")
+                    }
+                    else if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, speed1)) {
+                        AddToLog("Found speed 1")
+                    }
                 }
             }
+
+            else if (priority == "health") {
+                if (RadioHighest.Value == 1) {
+                    AddToLog("Picking highest health debuff")
+                    if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, health3)) {
+                        AddToLog("Found health 3")
+                    }
+                    else if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, health2)) {
+                        AddToLog("Found health 2")
+                    }
+                    else if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, health1)) {
+                        AddToLog("Found health 1")
+                    }
+                }
+            }
+
+            else if (priority == "regen") {
+                if (RadioHighest.Value == 1) {
+                    AddToLog("Picking highest regen debuff")
+                    if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, regen3)) {
+                        AddToLog("Found regen 3")
+                    }
+                    else if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, regen2)) {
+                        AddToLog("Found regen 2")
+                    }
+                    else if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, regen1)) {
+                        AddToLog("Found regen 1")
+                    }
+                }
+            }
+            
+            else if (priority == "yen") {
+				if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, yen2)) {
+					AddToLog("Found yen 2")
+				}
+				else {
+					AddToLog("Found yen 1")
+				}
+			}
 
             FindText().Click(cardX, cardY, 0)
             MouseMove 0, 10, 2, "R"
